@@ -48,7 +48,7 @@ function mostrarApp(email) {
   document.getElementById('login-container').style.display = 'none';
   document.getElementById('app-container').style.display  = 'flex';
   document.getElementById('user-email').textContent = email;
-  init();
+  carregarDadosDoFirebase(); // Carrega dados salvos do localStorage
 }
 
 // Modo Demo: mostra tela de login (sem validação)
@@ -100,10 +100,14 @@ function carregarDadosDoFirebase() {
     try {
       DB = JSON.parse(dadosSalvos);
       console.log('✅ Dados carregados do localStorage');
+      init(); // Inicializa a interface com os dados carregados
     } catch (e) {
       console.log('Erro ao carregar dados salvos, usando padrão');
       init();
     }
+  } else {
+    console.log('Nenhum dado salvo, iniciando novo...');
+    init();
   }
 }
 
