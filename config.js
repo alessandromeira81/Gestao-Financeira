@@ -51,13 +51,8 @@ function mostrarApp(email) {
   init();
 }
 
-// Ao carregar a página, já mostra o app em modo demo
-window.addEventListener('load', () => {
-  // Delay pequeno para deixar todo JS carregar
-  setTimeout(() => {
-    mostrarApp('demo@sua-empresa.com');
-  }, 100);
-});
+// Modo Demo: mostra tela de login (sem validação)
+// Usuário pode clicar "Entrar" com qualquer valor ou deixar em branco
 
 /* DESCOMENTE ISTO para ativar Firebase autenticação real
 auth.onAuthStateChanged((user) => {
