@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Sistema de gestão financeira">
+<meta name="theme-color" content="#1565C0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sua Empresa">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%231565C0' width='180' height='180'/><text x='50%' y='50%' font-size='90' font-weight='bold' fill='white' text-anchor='middle' dominant-baseline='central'>FIN</text></svg>">
+<title>Sua Empresa - Gestão Financeira</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore-compat.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+#login-container{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:16px;background:linear-gradient(135deg,#1565C0,#43A047);font-family:'Inter',sans-serif}
+.login-box{background:white;padding:24px;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.3);max-width:400px;width:100%}
+.login-box h1{text-align:center;color:#1565C0;margin-bottom:8px;font-size:24px}
+.login-box p{text-align:center;color:#64748B;margin-bottom:24px;font-size:13px}
+.login-form{display:flex;flex-direction:column;gap:12px}
+.login-form input{padding:12px;border:1.5px solid #E2E8F0;border-radius:6px;font-size:16px;font-family:'Inter',sans-serif;transition:border-color .2s;-webkit-appearance:none}
+.login-form input:focus{outline:0;border-color:#1565C0;box-shadow:0 0 0 3px rgba(21,101,192,.1)}
+.login-form button{padding:14px;background:linear-gradient(135deg,#1565C0,#1050A0);color:white;border:none;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;transition:transform .2s;min-height:44px}
+.login-form button:hover{transform:translateY(-2px)}
+.login-status{text-align:center;margin-top:12px;font-size:11px;color:#64748B}
+#app-container{display:none;flex-direction:column;height:100vh}
+.user-bar{background:linear-gradient(135deg,#1565C0,#1050A0);color:white;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;font-size:12px;position:fixed;top:0;right:0;z-index:300;width:auto;border-radius:0 0 0 8px;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.user-bar button{background:rgba(255,255,255,.2);color:white;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:11px;margin-left:15px;transition:background .2s}
+.user-bar button:hover{background:rgba(255,255,255,.3)}
+@media(min-width:640px){
+  .login-box{padding:32px}
+  .login-box h1{font-size:28px;margin-bottom:10px}
+  .login-box p{margin-bottom:30px}
+  .login-form{gap:15px}
+}
+</style>
+</head>
+<body>
+
+<!-- TELA DE LOGIN -->
+<div id="login-container">
+  <div class="login-box">
+    <h1>Sua Empresa</h1>
+    <p>Gestão Financeira</p>
+    <form class="login-form" onsubmit="event.preventDefault(); fazerLogin();">
+      <input type="email" id="email-input" placeholder="Email" required autofocus>
+      <input type="password" id="senha-input" placeholder="Senha" required>
+      <button type="submit">Entrar</button>
+      <div class="login-status">Carregando...</div>
+    </form>
+  </div>
+</div>
+
+<!-- APLICAÇÃO -->
+<div id="app-container">
+  <div class="user-bar">
+    <span>👤 <span id="user-email">-</span></span>
+    <button onclick="fazerLogout()">Sair</button>
+  </div>
+
+  <header>
+    <button class="hamburger" onclick="toggleMenu()">☰</button>
+    <div class="logo">
+      <div style="width:36px;height:36px;background:linear-gradient(135deg,#1565C0,#43A047);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:white">SE</div>
+      <div><h1>Sua Empresa</h1><p style="font-size:10px;margin:0">v1.0</p></div>
+    </div>
+    <div class="header-r">
+      <span id="hdr-date"></span>
+      <div class="alert-pill" id="hdr-alert" onclick="nav('alertas')" style="display:none">🔔 <span id="hdr-n">0</span></div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside id="sidebar">
+      <div class="nav-sec">Estratégico</div>
+      <div class="nav-item active" onclick="nav('painel')">📊 Painel</div>
+      <div class="nav-item" onclick="nav('evolutivo')">📈 Evolutivo</div>
+      <div class="nav-item" onclick="nav('investimentos-lancar')">💰 Investimentos</div>
+      <div class="nav-sec" style="margin-top:16px">Tático</div>
+      <div class="nav-item" onclick="nav('investimentos')">💳 Pagamentos</div>
+      <div class="nav-item" onclick="nav('despesas')">📉 Despesas</div>
+      <div class="nav-item" onclick="nav('alertas')">🚨 Alertas</div>
+      <div class="nav-sec" style="margin-top:16px">Operacional</div>
+      <div class="nav-item" onclick="nav('lancamentos')">📝 Lançamentos</div>
+      <div class="nav-item" onclick="nav('recorrentes')">🔄 Recorrentes</div>
+      <div class="nav-item" onclick="nav('projecao')">🚛 Por Ativo</div>
+      <div class="nav-item" onclick="nav('gerenciar')">⚙️ Gerenciar</div>
+      <div class="nav-footer">Sua Empresa v1.0<br>2026</div>
+    </aside>
+
+    <main>
+      <div id="page-painel" class="page active"></div>
+      <div id="page-investimentos-lancar" class="page"></div>
+      <div id="page-investimentos" class="page"></div>
+      <div id="page-despesas" class="page"></div>
+      <div id="page-evolutivo" class="page"></div>
+      <div id="page-projecao" class="page"></div>
+      <div id="page-recorrentes" class="page"></div>
+      <div id="page-lancamentos" class="page"></div>
+      <div id="page-alertas" class="page"></div>
+      <div id="page-gerenciar" class="page"></div>
+    </main>
+  </div>
+
+  <!-- MODAIS -->
+  <div id="modal-rec" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header"><h2>Nova Recorrente</h2><button onclick="closeModal()" style="background:0;border:0;font-size:20px;cursor:pointer">✕</button></div>
+      <div class="modal-body">
+        <div class="fg"><label>Nome</label><input type="text" id="r-nome"></div>
+        <div class="fg"><label>Categoria</label><select id="r-cat"></select></div>
+        <div class="fg"><label>Valor Esperado (R$)</label><input type="number" id="r-val" step="0.01"></div>
+        <div class="fg"><label>Dia (1-28)</label><input type="number" id="r-dia" min="1" max="28"></div>
+        <div class="fg"><label>Ativo</label><select id="r-cam"></select></div>
+        <div class="fg"><label>Tolerância (dias)</label><input type="number" id="r-tol" value="2"></div>
+        <div class="fg"><label>Observação</label><textarea id="r-obs"></textarea></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-o" onclick="closeModal()">Cancelar</button>
+        <button class="btn btn-p" onclick="salvarRec()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-invest" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header"><h2>Novo Investimento</h2><button onclick="closeModalInv()" style="background:0;border:0;font-size:20px;cursor:pointer">✕</button></div>
+      <div class="modal-body">
+        <div class="fg"><label>Data <span style="color:var(--red)">*</span></label><input type="date" id="inv-data" required></div>
+        <div class="fg"><label>Descrição <span style="color:var(--red)">*</span></label><input type="text" id="inv-desc" required></div>
+        <div class="fg"><label>Investidor <span style="color:var(--red)">*</span></label><select id="inv-inv" required></select></div>
+        <div class="fg"><label>Valor (R$) <span style="color:var(--red)">*</span></label><input type="text" id="inv-val" inputmode="decimal" required></div>
+        <div class="fg"><label>Destinado para</label><select id="inv-dest" onchange="alternarOutros()"><option value="Aporte">Aporte</option><option value="Fluxo">Fluxo</option><option value="Outros">Outros</option></select></div>
+        <div class="fg" id="inv-dest-outro" style="display:none"><label>Descrever</label><input type="text" id="inv-dest-outro-txt" placeholder="Especifique"></div>
+        <div class="fg"><label>Ativo</label><select id="inv-cam"></select></div>
+        <div class="fg"><label>Observação</label><textarea id="inv-obs"></textarea></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-o" onclick="closeModalInv()">Cancelar</button>
+        <button class="btn btn-s" onclick="salvarInvest()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-rec-edit" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header"><h2>Editar Recorrente</h2><button onclick="closeModalRecEdit()" style="background:0;border:0;font-size:20px;cursor:pointer">✕</button></div>
+      <div class="modal-body">
+        <input type="hidden" id="re-id">
+        <div class="fg"><label>Nome</label><input type="text" id="re-nome"></div>
+        <div class="fg"><label>Categoria</label><select id="re-cat"></select></div>
+        <div class="fg"><label>Valor Esperado (R$)</label><input type="number" id="re-val" step="0.01"></div>
+        <div class="fg"><label>Dia (1-28)</label><input type="number" id="re-dia" min="1" max="28"></div>
+        <div class="fg"><label>Tolerância (dias)</label><input type="number" id="re-tol"></div>
+        <div class="fg"><label><input type="checkbox" id="re-ativo"> Ativa</label></div>
+        <div class="fg"><label>Observação</label><textarea id="re-obs"></textarea></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-o" onclick="closeModalRecEdit()">Cancelar</button>
+        <button class="btn btn-s" onclick="salvarRecEdit()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-rec-pag" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header"><h2>Registrar Pagamento</h2><button onclick="closeModalRecPag()" style="background:0;border:0;font-size:20px;cursor:pointer">✕</button></div>
+      <div class="modal-body">
+        <input type="hidden" id="rp-id">
+        <div class="fg"><label>Data do Pagamento</label><input type="date" id="rp-data"></div>
+        <div class="fg"><label>Valor Pago (R$)</label><input type="number" id="rp-val" step="0.01"></div>
+        <div class="fg"><label>Status</label><select id="rp-status"><option value="ok">OK</option><option value="divergente">Divergente</option></select></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-o" onclick="closeModalRecPag()">Cancelar</button>
+        <button class="btn btn-s" onclick="salvarRecPag()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-editar-inv" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header"><h2>Editar Investimento</h2><button onclick="closeModalEditarInv()" style="background:0;border:0;font-size:20px;cursor:pointer">✕</button></div>
+      <div class="modal-body">
+        <input type="hidden" id="ei-id">
+        <div class="fg"><label>Data <span style="color:var(--red)">*</span></label><input type="date" id="ei-data" required></div>
+        <div class="fg"><label>Descrição <span style="color:var(--red)">*</span></label><input type="text" id="ei-desc" required></div>
+        <div class="fg"><label>Investidor <span style="color:var(--red)">*</span></label><select id="ei-inv" required></select></div>
+        <div class="fg"><label>Valor (R$) <span style="color:var(--red)">*</span></label><input type="text" id="ei-val" inputmode="decimal" required></div>
+        <div class="fg"><label>Destinado para <span style="color:var(--red)">*</span></label><select id="ei-dest" onchange="alternarOutrosEdit()" required><option value="">Selecione...</option></select></div>
+        <div class="fg" id="ei-dest-outro" style="display:none"><label>Descrever</label><input type="text" id="ei-dest-outro-txt" placeholder="Especifique"></div>
+        <div class="fg"><label>Ativo</label><select id="ei-cam"></select></div>
+        <div class="fg"><label>Observação</label><textarea id="ei-obs"></textarea></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-o" onclick="closeModalEditarInv()">Cancelar</button>
+        <button class="btn btn-s" onclick="salvarEdicaoInv()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-editar-lanc" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header"><h2>Editar Lançamento</h2><button onclick="closeModalEditarLanc()" style="background:0;border:0;font-size:20px;cursor:pointer">✕</button></div>
+      <div class="modal-body">
+        <input type="hidden" id="el-id">
+        <div class="fg"><label>Data <span style="color:var(--red)">*</span></label><input type="date" id="el-data" required></div>
+        <div class="fg"><label>Nome <span style="color:var(--red)">*</span></label><input type="text" id="el-nome" required></div>
+        <div class="fg"><label>Valor (R$) <span style="color:var(--red)">*</span></label><input type="text" id="el-valor" inputmode="decimal" required></div>
+        <div class="fg"><label>Categoria <span style="color:var(--red)">*</span></label><select id="el-cat" required></select></div>
+        <div class="fg"><label>Quem <span style="color:var(--red)">*</span></label><select id="el-quem" required></select></div>
+        <div class="fg"><label>Origem</label><select id="el-cam"></select></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-o" onclick="closeModalEditarLanc()">Cancelar</button>
+        <button class="btn btn-s" onclick="salvarEdicaoLanc()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-proj-edit" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header"><h2>Editar Ativo</h2><button onclick="document.getElementById('modal-proj-edit').classList.add('hidden')" style="background:0;border:0;font-size:20px;cursor:pointer">✕</button></div>
+      <div class="modal-body">
+        <input type="hidden" id="proj-cam">
+        <div class="fg"><label>Fat. Bruto Mensal (R$) <span style="color:var(--red)">*</span></label><input type="text" id="proj-fat" inputmode="decimal" required></div>
+        <div class="fg"><label>Imposto (%) <span style="color:var(--red)">*</span></label><input type="number" id="proj-imp" step="0.1" required></div>
+        <div class="fg"><label>Placa <span style="color:var(--red)">*</span></label><input type="text" id="proj-placa" required></div>
+        <div id="proj-custos"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-o" onclick="document.getElementById('modal-proj-edit').classList.add('hidden')">Cancelar</button>
+        <button class="btn btn-s" onclick="salvarProjEdicao()">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCRIPTS: app-dados.js, config.js e app.js -->
+<!-- app-dados.js deve ser criado e preenchido com os dados da empresa -->
+<script src="app-dados.js"></script>
+<!-- app.js precisa ser carregado DEPOIS de app-dados.js para usar CATS, SOCIOS, etc -->
+<script src="app.js"></script>
+<!-- config.js contém a inicialização do Firebase -->
+<script src="config.js"></script>
+
+<!-- Registrar Service Worker para PWA -->
+<script>
+  if('serviceWorker' in navigator){
+    window.addEventListener('load',()=>{
+      navigator.serviceWorker.register('sw.js').then(reg=>{
+        console.log('✅ Service Worker registrado!',reg);
+      }).catch(err=>{
+        console.warn('⚠️ Service Worker não registrado:',err);
+      });
+    });
+  }
+</script>
+
+</body>
+</html>

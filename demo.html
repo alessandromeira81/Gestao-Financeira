@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FLUMAP - Demonstração</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .demo-watermark {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: #FFA726;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      z-index: 1000;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-watermark">MODE DEMO</div>
+
+  <div id="login-container">
+    <div class="login-box">
+      <h1>🚀 FLUMAP</h1>
+      <p>Gestão Financeira</p>
+      <form class="login-form" onsubmit="event.preventDefault(); fazerLogin();">
+        <input type="email" id="email-input" placeholder="Email" value="demo@flumap.com">
+        <input type="password" id="senha-input" placeholder="Senha" value="demo123">
+        <button type="submit">Entrar (ou aguarde...)</button>
+        <div class="login-status">Carregando dados de demonstração...</div>
+      </form>
+    </div>
+  </div>
+
+  <!-- APLICAÇÃO -->
+  <div id="app-container">
+    <div class="user-bar">
+      <span>👤 <span id="user-email">user@flumap.com</span></span>
+      <button onclick="fazerLogout()">Sair</button>
+    </div>
+
+    <div class="main-layout">
+      <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+          <div style="font-size: 20px; margin-bottom: 12px;">🚀 FLUMAP</div>
+          <button onclick="toggleMenu(true)" style="display: none;" id="close-menu-btn">✕</button>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-label">ESTRATÉGICO</div>
+          <button class="nav-item" onclick="nav('painel')">📊 Painel</button>
+          <button class="nav-item" onclick="nav('evolutivo')">📈 Evolutivo</button>
+          <button class="nav-item" onclick="nav('investimentos')">💰 Investimentos</button>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-label">TÁTICO</div>
+          <button class="nav-item" onclick="nav('investimentos-detalhes')">💳 Pagamentos</button>
+          <button class="nav-item" onclick="nav('despesas')">📉 Despesas</button>
+          <button class="nav-item" onclick="nav('alertas')">🚨 Alertas</button>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-label">OPERACIONAL</div>
+          <button class="nav-item" onclick="nav('lancamentos')">📝 Lançamentos</button>
+          <button class="nav-item" onclick="nav('recorrentes')">🔄 Recorrentes</button>
+          <button class="nav-item" onclick="nav('projecao')">🚛 Por Caminhão</button>
+          <button class="nav-item" onclick="nav('gerenciar')">⚙️ Gerenciar</button>
+        </div>
+      </div>
+
+      <div class="content-area">
+        <div id="page-painel" class="page"></div>
+        <div id="page-investimentos" class="page"></div>
+        <div id="page-investimentos-lancar" class="page"></div>
+        <div id="page-despesas" class="page"></div>
+        <div id="page-evolutivo" class="page"></div>
+        <div id="page-projecao" class="page"></div>
+        <div id="page-recorrentes" class="page"></div>
+        <div id="page-lancamentos" class="page"></div>
+        <div id="page-alertas" class="page"></div>
+        <div id="page-gerenciar" class="page"></div>
+        <div id="page-investimentos-detalhes" class="page"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAIS (mesmo da versão original) -->
+  <div id="modal-rec" class="modal hidden">
+    <div class="modal-content">
+      <h2>Nova Recorrente</h2>
+      <form onsubmit="salvarRec(); return false;">
+        <input type="text" id="r-nome" placeholder="Nome" required>
+        <select id="r-cat" required>
+          <option value="">Selecione categoria</option>
+        </select>
+        <input type="number" id="r-val" placeholder="Valor esperado" required step="0.01">
+        <input type="number" id="r-dia" placeholder="Dia (1-28)" min="1" max="28" required>
+        <select id="r-cam">
+          <option value="">Empresa</option>
+          <option value="c1">Caminhão 1</option>
+          <option value="c2">Caminhão 2</option>
+        </select>
+        <input type="number" id="r-tol" placeholder="Tolerância (dias)" value="2">
+        <textarea id="r-obs" placeholder="Observações"></textarea>
+        <button type="submit" class="btn btn-p">Salvar</button>
+        <button type="button" class="btn btn-o" onclick="closeModal()">Cancelar</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="app-dados.js"></script>
+  <script src="app.js"></script>
+  <script src="config_demo.js"></script>
+</body>
+</html>

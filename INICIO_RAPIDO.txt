@@ -1,0 +1,80 @@
+═══════════════════════════════════════════════════════════════════════════════
+  SUA EMPRESA - Sistema de Gestão Financeira
+  Versão 1.0.0
+═══════════════════════════════════════════════════════════════════════════════
+
+COMO ABRIR E USAR:
+
+1️⃣  OPÇÃO MAIS SIMPLES (Sem servidor):
+   • Abra a pasta: C:\Users\Tatiana\Desktop\Claude Code\FLUMAP\Template - Copia\
+   • Clique 2x em: demo.html (para visualizar em modo demo)
+   • OU clique 2x em: index.html (para usar com login)
+
+2️⃣  OPÇÃO COM SERVIDOR LOCAL (recomendado):
+   • Abra PowerShell ou Command Prompt
+   • Digite: cd "C:\Users\Tatiana\Desktop\Claude Code\FLUMAP\Template - Copia"
+   • Digite: python -m http.server 8000
+   • Abra navegador: http://localhost:8000
+   • Clique em index.html
+
+3️⃣  MODO DEMO (sem login):
+   • Clique 2x em: demo.html
+   • Já mostra todos os dados carregados
+
+═══════════════════════════════════════════════════════════════════════════════
+
+DADOS CARREGADOS:
+
+✅ Sócios:
+   • Sócio 1
+   • Sócio 2
+
+✅ 22 Pagamentos registrados
+✅ 3 Despesas Recorrentes
+✅ 20 Investimentos/Aportes
+✅ 2 Veículos (Caminhão 1 e Caminhão 2) com modelos financeiros
+
+✅ Todos os valores já foram transformados (÷2, arredondado para cima)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+FUNCIONALIDADES PRINCIPAIS:
+
+📊 PAINEL - Dashboard com resumo financeiro
+📈 EVOLUTIVO - Gráficos de evolução mensal
+💰 INVESTIMENTOS - Aporte dos sócios
+💳 PAGAMENTOS - Histórico de todas as despesas
+📉 DESPESAS - Análise por categoria
+🚨 ALERTAS - Recorrentes com atraso
+📝 LANÇAMENTOS - Adicionar novos pagamentos
+🔄 RECORRENTES - Gerenciar cobranças mensais
+🚛 PROJEÇÃO - Análise financeira por veículo
+⚙️  GERENCIAR - Editar dados, investimentos, etc.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+NAVEGAÇÃO:
+
+• Menu lateral esquerdo: Selecione a aba desejada
+• Botão ☰ (mobile): Abre/fecha o menu em dispositivos pequenos
+• Botão "Sair": Faz logout
+
+═══════════════════════════════════════════════════════════════════════════════
+
+PRÓXIMOS PASSOS:
+
+1. Teste o sistema abrindo em seu navegador
+2. Explore todas as abas para familiarizar-se com os dados
+3. Se quiser fazer upload para internet:
+   - Use um servidor web (GitHub Pages, Vercel, Netlify, etc)
+   - Configure Firebase em config.js
+4. Se quiser criar uma apresentação de treinamento:
+   - Use as imagens do sistema para criar slides
+
+═══════════════════════════════════════════════════════════════════════════════
+
+SUPORTE:
+
+Arquivo de resumo completo: CUSTOMIZACAO_RESUMO.md
+
+═══════════════════════════════════════════════════════════════════════════════
