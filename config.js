@@ -32,45 +32,37 @@ const db   = firebase.firestore();
 let usuarioAtual = null;
 
 // ============================================================
-// FIREBASE AUTENTICAÇÃO ATIVA
-// Sincronização com Firestore em tempo real
+// MODO DEMO SEM LOGIN + SINCRONIZAÇÃO COM FIREBASE
+// Qualquer email/senha funciona, mas sincroniza dados entre dispositivos
 // ============================================================
 
-auth.onAuthStateChanged((user) => {
-  usuarioAtual = user;
-  if (user) {
-    document.getElementById('login-container').style.display = 'none';
-    document.getElementById('app-container').style.display  = 'flex';
-    document.getElementById('user-email').textContent = user.email;
-    carregarDadosDoFirebase();
-  } else {
-    document.getElementById('login-container').style.display = 'flex';
-    document.getElementById('app-container').style.display  = 'none';
-  }
-});
-
 function fazerLogin() {
-  const email = document.getElementById('email-input').value;
-  const senha = document.getElementById('senha-input').value;
-  if (!email || !senha) { alert('Preencha email e senha!'); return; }
+  const email = document.getElementById('email-input').value || 'usuario@demo.com';
+  const senha = document.getElementById('senha-input').value || 'demo';
 
-  auth.signInWithEmailAndPassword(email, senha)
-    .catch((erro) => {
-      if (erro.code === 'auth/user-not-found' || erro.code === 'auth/wrong-password') {
-        // Oferecer criar conta se não existir
-        if (confirm('Conta não encontrada. Deseja criar uma nova conta?')) {
-          auth.createUserWithEmailAndPassword(email, senha)
-            .catch(err => alert('❌ Erro ao criar conta: ' + err.message));
-        }
-      } else {
-        alert('❌ Erro: ' + erro.message);
-      }
-    });
+  // Cria usuário "fake" com o email digitado
+  usuarioAtual = {
+    email: email,
+    uid: btoa(email) // Usa email como ID único no Firebase
+  };
+
+  mostrarApp(email);
+}
+
+function mostrarApp(email) {
+  document.getElementById('login-container').style.display = 'none';
+  document.getElementById('app-container').style.display  = 'flex';
+  document.getElementById('user-email').textContent = email;
+  carregarDadosDoFirebase();
 }
 
 function fazerLogout() {
   if (confirm('Tem certeza que deseja sair?')) {
-    auth.signOut().catch(err => alert('Erro ao sair: ' + err.message));
+    usuarioAtual = null;
+    document.getElementById('login-container').style.display = 'flex';
+    document.getElementById('app-container').style.display  = 'none';
+    document.getElementById('email-input').value = '';
+    document.getElementById('senha-input').value = '';
   }
 }
 
