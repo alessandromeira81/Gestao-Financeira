@@ -7,12 +7,13 @@
 // PASSO 3: Copie as credenciais abaixo
 
 const firebaseConfig = {
-  apiKey:            "COLE_AQUI_A_API_KEY",
-  authDomain:        "COLE_AQUI.firebaseapp.com",
-  projectId:         "COLE_AQUI_O_PROJECT_ID",
-  storageBucket:     "COLE_AQUI.appspot.com",
-  messagingSenderId: "COLE_AQUI_O_MESSAGING_SENDER_ID",
-  appId:             "COLE_AQUI_O_APP_ID"
+  apiKey: "AIzaSyD1H1i8zLpPfIP6YBXExvmLQ_HkKHzt83w",
+  authDomain: "gestao-financeira-2026.firebaseapp.com",
+  projectId: "gestao-financeira-2026",
+  storageBucket: "gestao-financeira-2026.firebasestorage.app",
+  messagingSenderId: "285199109158",
+  appId: "1:285199109158:web:291ac81ec3c361c9646ae7",
+  measurementId: "G-6PYKHFK383"
 };
 
 // ============================================================
@@ -31,43 +32,10 @@ const db   = firebase.firestore();
 let usuarioAtual = null;
 
 // ============================================================
-// MODO DEMO - LOGIN SEM VALIDAÇÃO (qualquer pessoa entra)
-// Descomente a seção Firebase abaixo para ativar autenticação real
+// FIREBASE AUTENTICAÇÃO ATIVA
+// Sincronização com Firestore em tempo real
 // ============================================================
 
-function fazerLogin() {
-  const email = document.getElementById('email-input').value || 'usuario@demo.com';
-  const senha = document.getElementById('senha-input').value || 'demo';
-
-  // Modo Demo: aceita qualquer coisa (ou nada!)
-  usuarioAtual = { email: email };
-  mostrarApp(email);
-}
-
-function mostrarApp(email) {
-  document.getElementById('login-container').style.display = 'none';
-  document.getElementById('app-container').style.display  = 'flex';
-  document.getElementById('user-email').textContent = email;
-
-  // Carregar dados salvos ANTES de chamar init()
-  const dadosSalvos = localStorage.getItem('flumap_v2');
-  if (dadosSalvos) {
-    try {
-      DB = JSON.parse(dadosSalvos);
-      console.log('✅ Dados carregados do localStorage');
-    } catch (e) {
-      console.log('Erro ao carregar dados salvos, usando padrão');
-      // Se falhar, init() vai usar os dados padrão
-    }
-  }
-
-  init();
-}
-
-// Modo Demo: mostra tela de login (sem validação)
-// Usuário pode clicar "Entrar" com qualquer valor ou deixar em branco
-
-/* DESCOMENTE ISTO para ativar Firebase autenticação real
 auth.onAuthStateChanged((user) => {
   usuarioAtual = user;
   if (user) {
@@ -85,43 +53,78 @@ function fazerLogin() {
   const email = document.getElementById('email-input').value;
   const senha = document.getElementById('senha-input').value;
   if (!email || !senha) { alert('Preencha email e senha!'); return; }
+
   auth.signInWithEmailAndPassword(email, senha)
-    .catch(() => alert('Email ou senha incorretos!'));
+    .catch((erro) => {
+      if (erro.code === 'auth/user-not-found' || erro.code === 'auth/wrong-password') {
+        // Oferecer criar conta se não existir
+        if (confirm('Conta não encontrada. Deseja criar uma nova conta?')) {
+          auth.createUserWithEmailAndPassword(email, senha)
+            .catch(err => alert('❌ Erro ao criar conta: ' + err.message));
+        }
+      } else {
+        alert('❌ Erro: ' + erro.message);
+      }
+    });
 }
-*/
 
 function fazerLogout() {
   if (confirm('Tem certeza que deseja sair?')) {
-    usuarioAtual = null;
-    document.getElementById('login-container').style.display = 'flex';
-    document.getElementById('app-container').style.display  = 'none';
-    document.getElementById('email-input').value = '';
-    document.getElementById('senha-input').value = '';
+    auth.signOut().catch(err => alert('Erro ao sair: ' + err.message));
   }
 }
 
 function salvarNoFirebase() {
-  // Modo Demo: salva apenas no localStorage
-  localStorage.setItem('flumap_v2', JSON.stringify(DB));
-  console.log('✅ Dados salvos localmente');
+  if (!usuarioAtual) { console.log('Usuário não autenticado'); return; }
+
+  db.collection('usuarios').doc(usuarioAtual.uid).set({
+    email: usuarioAtual.email,
+    ultima_atualizacao: new Date(),
+    dados: DB
+  }).then(() => {
+    console.log('✅ Dados salvos no Firebase');
+    // Também salva no localStorage como backup
+    localStorage.setItem('flumap_v2', JSON.stringify(DB));
+  }).catch((e) => {
+    console.error('❌ Erro ao salvar no Firebase:', e.message);
+    // Salva apenas no localStorage se Firebase falhar
+    localStorage.setItem('flumap_v2', JSON.stringify(DB));
+  });
 }
 
 function carregarDadosDoFirebase() {
-  // Modo Demo: carrega do localStorage
-  const dadosSalvos = localStorage.getItem('flumap_v2');
-  if (dadosSalvos) {
-    try {
-      DB = JSON.parse(dadosSalvos);
-      console.log('✅ Dados carregados do localStorage');
-      init(); // Inicializa a interface com os dados carregados
-    } catch (e) {
-      console.log('Erro ao carregar dados salvos, usando padrão');
-      init();
+  if (!usuarioAtual) { init(); return; }
+
+  db.collection('usuarios').doc(usuarioAtual.uid).get().then((doc) => {
+    if (doc.exists && doc.data().dados) {
+      DB = doc.data().dados;
+      console.log('✅ Dados carregados do Firebase');
+    } else {
+      // Se não tiver dados no Firebase, carrega do localStorage
+      const dadosSalvos = localStorage.getItem('flumap_v2');
+      if (dadosSalvos) {
+        try {
+          DB = JSON.parse(dadosSalvos);
+          console.log('✅ Dados carregados do localStorage');
+        } catch (e) {
+          console.log('Usando dados padrão');
+        }
+      }
     }
-  } else {
-    console.log('Nenhum dado salvo, iniciando novo...');
     init();
-  }
+  }).catch((e) => {
+    console.log('Erro ao carregar do Firebase, tentando localStorage...');
+    const dadosSalvos = localStorage.getItem('flumap_v2');
+    if (dadosSalvos) {
+      try {
+        DB = JSON.parse(dadosSalvos);
+        console.log('✅ Dados carregados do localStorage');
+      } catch (e) {
+        console.log('Usando dados padrão');
+      }
+    }
+    init();
+  });
 }
 
 const saveOriginal = window.save || (() => {});
