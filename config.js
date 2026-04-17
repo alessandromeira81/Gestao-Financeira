@@ -30,6 +30,36 @@ const db   = firebase.firestore();
 
 let usuarioAtual = null;
 
+// ============================================================
+// MODO DEMO - LOGIN SEM VALIDAÇÃO (qualquer pessoa entra)
+// Descomente a seção Firebase abaixo para ativar autenticação real
+// ============================================================
+
+function fazerLogin() {
+  const email = document.getElementById('email-input').value || 'usuario@demo.com';
+  const senha = document.getElementById('senha-input').value || 'demo';
+
+  // Modo Demo: aceita qualquer coisa (ou nada!)
+  usuarioAtual = { email: email };
+  mostrarApp(email);
+}
+
+function mostrarApp(email) {
+  document.getElementById('login-container').style.display = 'none';
+  document.getElementById('app-container').style.display  = 'flex';
+  document.getElementById('user-email').textContent = email;
+  init();
+}
+
+// Ao carregar a página, já mostra o app em modo demo
+window.addEventListener('load', () => {
+  // Delay pequeno para deixar todo JS carregar
+  setTimeout(() => {
+    mostrarApp('demo@sua-empresa.com');
+  }, 100);
+});
+
+/* DESCOMENTE ISTO para ativar Firebase autenticação real
 auth.onAuthStateChanged((user) => {
   usuarioAtual = user;
   if (user) {
@@ -50,33 +80,36 @@ function fazerLogin() {
   auth.signInWithEmailAndPassword(email, senha)
     .catch(() => alert('Email ou senha incorretos!'));
 }
+*/
 
 function fazerLogout() {
-  if (confirm('Tem certeza que deseja sair?')) auth.signOut();
+  if (confirm('Tem certeza que deseja sair?')) {
+    usuarioAtual = null;
+    document.getElementById('login-container').style.display = 'flex';
+    document.getElementById('app-container').style.display  = 'none';
+    document.getElementById('email-input').value = '';
+    document.getElementById('senha-input').value = '';
+  }
 }
 
 function salvarNoFirebase() {
-  if (!usuarioAtual) { alert('Usuário não autenticado!'); return; }
-  db.collection('dados').doc(DOC_ID).set({
-    ultima_atualizacao: new Date(),
-    ultimo_usuario: usuarioAtual.email,
-    dados: DB
-  }).then(() => {
-    localStorage.setItem('flumap_v2', JSON.stringify(DB));
-    alert('✅ Dados salvos com sucesso!');
-  }).catch((e) => alert('❌ Erro ao salvar: ' + e.message));
+  // Modo Demo: salva apenas no localStorage
+  localStorage.setItem('flumap_v2', JSON.stringify(DB));
+  console.log('✅ Dados salvos localmente');
 }
 
 function carregarDadosDoFirebase() {
-  if (!usuarioAtual) return;
-  db.collection('dados').doc(DOC_ID).get().then((doc) => {
-    if (doc.exists && doc.data().dados) {
-      DB = doc.data().dados;
-      render('painel');
-    } else {
+  // Modo Demo: carrega do localStorage
+  const dadosSalvos = localStorage.getItem('flumap_v2');
+  if (dadosSalvos) {
+    try {
+      DB = JSON.parse(dadosSalvos);
+      console.log('✅ Dados carregados do localStorage');
+    } catch (e) {
+      console.log('Erro ao carregar dados salvos, usando padrão');
       init();
     }
-  }).catch(() => init());
+  }
 }
 
 const saveOriginal = window.save || (() => {});
