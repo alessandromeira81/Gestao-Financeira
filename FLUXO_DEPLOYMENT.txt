@@ -1,0 +1,137 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║         🚀 FLUXO DE DEPLOYMENT - SUA EMPRESA PARA A WEB                       ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  SITUAÇÃO ATUAL (AGORA)                                                      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                               │
+│  📂 Computador (Seu PC)                                                      │
+│  └─ C:\Users\...\Template - Copia\                                          │
+│     ├─ app-dados.js (dados: Sócio 1, Sócio 2, etc)                         │
+│     ├─ app.js (código da aplicação)                                         │
+│     ├─ index.html (interface)                                               │
+│     ├─ styles.css (estilo)                                                  │
+│     └─ ... (outros arquivos)                                                │
+│                                                                               │
+│  ✅ Git inicializado (repositório local criado)                             │
+│  ✅ Arquivos commitados localmente                                          │
+│                                                                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  PRÓXIMOS PASSOS - FLUXO COMPLETO                                           │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                               │
+│  PASSO 1: Criar repositório no GitHub                                       │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                                       │
+│  https://github.com/new                                                     │
+│  • Nome: sua-empresa                                                         │
+│  • Type: Public                                                              │
+│  ✅ Cria espaço na nuvem para seus arquivos                                 │
+│                                                                               │
+│                                    ⬇️                                         │
+│                                                                               │
+│  PASSO 2: Fazer push (enviar) do PC para GitHub                             │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                                 │
+│  Executar em PowerShell:                                                    │
+│                                                                               │
+│  git remote add origin https://github.com/SEU_USUARIO/sua-empresa.git      │
+│  git branch -M main                                                          │
+│  git push -u origin main                                                     │
+│                                                                               │
+│  ✅ Seus arquivos agora estão em: https://github.com/SEU_USUARIO/...       │
+│                                                                               │
+│                                    ⬇️                                         │
+│                                                                               │
+│  PASSO 3: Conectar Vercel ao GitHub                                         │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                                             │
+│  https://vercel.com                                                          │
+│  • Login com Google                                                          │
+│  • New Project                                                               │
+│  • Selecionar repositório GitHub                                            │
+│  • Configurar (deixar padrões)                                              │
+│  ✅ Vercel vai hospedar seu site na nuvem                                   │
+│                                                                               │
+│                                    ⬇️                                         │
+│                                                                               │
+│  PASSO 4: Deploy automático                                                 │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━                                                │
+│  Vercel faz o deploy automaticamente (~30s)                                 │
+│                                                                               │
+│  🎉 PRONTO! Seu site está ao vivo em:                                       │
+│     https://sua-empresa.vercel.app                                          │
+│                                                                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  ARQUITETURA FINAL (DEPOIS DO DEPLOY)                                       │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                               │
+│                                                                               │
+│       SEU PC (Local)          →        GITHUB          →       VERCEL       │
+│       ═══════════════              ════════════            ═════════════     │
+│                                                                               │
+│    📂 Arquivos Locais        📦 Repositório            🌐 Site na Web       │
+│    app-dados.js              Git (versão controle)     CDN Global           │
+│    app.js                    Histórico de mudanças     HTTPS automático     │
+│    index.html                Controle de acesso       Auto-deploy           │
+│    styles.css                                         Backups automáticos   │
+│                                                                               │
+│    Você edita aqui      →    git push (envia)    →   Vercel deploy auto   │
+│                                                                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  WORKFLOW FUTURO (APÓS DEPLOY INICIAL)                                      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                               │
+│  1. Você edita um arquivo (ex: app-dados.js)                                │
+│     └─ Adiciona novo sócio ou pagamento                                     │
+│                                                                               │
+│  2. Salva o arquivo no PC                                                   │
+│                                                                               │
+│  3. No PowerShell:                                                           │
+│     git add .                                                                │
+│     git commit -m "Adicionar novo sócio"                                    │
+│     git push                                                                 │
+│                                                                               │
+│  4. GitHub recebe as mudanças                                               │
+│                                                                               │
+│  5. Vercel detecta mudança e faz deploy automaticamente                     │
+│     └─ ~30 segundos depois, site está atualizado                           │
+│                                                                               │
+│  6. Acessa: https://sua-empresa.vercel.app                                  │
+│     └─ ✅ Vê as mudanças ao vivo!                                           │
+│                                                                               │
+│  ⚡ NADA MANUAL! Tudo é automático quando você faz git push                 │
+│                                                                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  RESUMO FINAL - O QUE CADA PLATAFORMA FAZ                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                               │
+│  📝 SEU PC                                                                   │
+│     └─ Escreve e edita o código                                             │
+│                                                                               │
+│  📦 GIT (Controle de Versão)                                                │
+│     └─ Controla mudanças, histórico, backup                                │
+│                                                                               │
+│  🐙 GITHUB (Repositório Remoto)                                             │
+│     └─ Servidor que guarda seus arquivos na nuvem                          │
+│        (tipo um Dropbox para código)                                        │
+│                                                                               │
+│  ☁️  VERCEL (Host/Servidor Web)                                             │
+│     └─ Publica seu site na internet                                         │
+│     └─ Dá acesso a https://sua-empresa.vercel.app                          │
+│     └─ Detecta mudanças no GitHub e faz deploy automático                  │
+│                                                                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+  PRÓXIMOS PASSOS AGORA:
+  1️⃣  Abra o arquivo: DEPLOY_VERCEL_GITHUB.md
+  2️⃣  Siga os 5 passos
+  3️⃣  Em 10 minutos seu site está na web!
+═══════════════════════════════════════════════════════════════════════════════

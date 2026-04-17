@@ -1,0 +1,115 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                  🚀 COMECE AQUI - SUBIR PARA A WEB                            ║
+║                      Sua Empresa v1.0.0                                       ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+✅ SITUAÇÃO ATUAL:
+   Seus arquivos já estão prontos em um repositório Git local.
+   Próximo passo: Enviar para GitHub e Vercel
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 INSTRUÇÕES RÁPIDAS (3 PASSOS - 10 MINUTOS):
+
+PASSO 1️⃣  → Criar repositório no GitHub
+  • Abra: https://github.com/new
+  • Nome: sua-empresa
+  • Visibilidade: Public ⭕
+  • Clique: Create
+
+PASSO 2️⃣  → Fazer push do PC para GitHub
+  • Abra: PowerShell
+  • Digite:
+
+    cd "C:\Users\Tatiana\Desktop\Claude Code\FLUMAP\Template - Copia"
+    git remote add origin https://github.com/SEU_USUARIO/sua-empresa.git
+    git branch -M main
+    git push -u origin main
+
+  • Substitua SEU_USUARIO pelo seu nome de usuário do GitHub
+
+PASSO 3️⃣  → Conectar Vercel e fazer deploy
+  • Abra: https://vercel.com
+  • Login com: Google
+  • New Project
+  • Selecione o repositório: sua-empresa
+  • Deploy (tudo padrão)
+
+  ✅ PRONTO! Seu site estará em:
+     https://sua-empresa.vercel.app
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📖 DOCUMENTAÇÃO DISPONÍVEL:
+
+  1. GUIA_PASSO_A_PASSO.md .......... Guia super detalhado com prints
+  2. DEPLOY_VERCEL_GITHUB.md ....... Instruções completas passo-a-passo
+  3. FLUXO_DEPLOYMENT.txt ......... Diagrama visual do processo
+  4. push-para-github.bat ......... Script auxiliar (opcional)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️  IMPORTANTE:
+
+  • GitHub username: Use seu usuário do GitHub (ex: joao-silva)
+  • Se tiver 2FA no GitHub: Use Personal Access Token
+    → https://github.com/settings/tokens
+  • Repositório deve ser PUBLIC (não privado)
+  • PowerShell: Abrir com Windows PowerShell (não cmd.exe)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❓ DÚVIDAS?
+
+  • Erro ao fazer git push?
+    → Pode ser autenticação. Use token pessoal:
+      https://github.com/settings/tokens
+
+  • Vercel não encontra repositório?
+    → Vá em Settings > Configure GitHub App
+    → Autorize Vercel a acessar seus repos
+
+  • Build failed?
+    → Verifique logs no Vercel dashboard
+    → Geralmente é arquivo com erro de sintaxe
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📱 APÓS O DEPLOY:
+
+  ✅ Site ao vivo: https://sua-empresa.vercel.app
+  ✅ Todos os dados carregados (Sócio 1, Sócio 2, pagamentos, etc)
+  ✅ Interface completa funcionando
+  ✅ Deploy automático (próximas atualizações são automáticas!)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔄 WORKFLOW FUTURO:
+
+  1. Edite um arquivo localmente (ex: app-dados.js)
+  2. Faça git push:
+
+     git add .
+     git commit -m "Nova mudança"
+     git push
+
+  3. Vercel faz deploy automaticamente (~30s depois)
+  4. Site está atualizado!
+
+  ⚡ Sem necessidade de fazer nada manualmente!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✨ PRÓXIMOS PASSOS:
+
+  [ ] 1. Leia: GUIA_PASSO_A_PASSO.md (mais detalhado)
+  [ ] 2. Crie repositório no GitHub
+  [ ] 3. Faça git push
+  [ ] 4. Conecte Vercel
+  [ ] 5. Celebre! 🎉
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Boa sorte! Quando subir para a web, me avisa o link! 🚀
+
+═══════════════════════════════════════════════════════════════════════════════
