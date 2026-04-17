@@ -48,7 +48,20 @@ function mostrarApp(email) {
   document.getElementById('login-container').style.display = 'none';
   document.getElementById('app-container').style.display  = 'flex';
   document.getElementById('user-email').textContent = email;
-  carregarDadosDoFirebase(); // Carrega dados salvos do localStorage
+
+  // Carregar dados salvos ANTES de chamar init()
+  const dadosSalvos = localStorage.getItem('flumap_v2');
+  if (dadosSalvos) {
+    try {
+      DB = JSON.parse(dadosSalvos);
+      console.log('✅ Dados carregados do localStorage');
+    } catch (e) {
+      console.log('Erro ao carregar dados salvos, usando padrão');
+      // Se falhar, init() vai usar os dados padrão
+    }
+  }
+
+  init();
 }
 
 // Modo Demo: mostra tela de login (sem validação)
