@@ -17,10 +17,9 @@ const firebaseConfig = {
 };
 
 // ============================================================
-// IDENTIFICADOR DO DOCUMENTO — mude se quiser separar dados
-// dentro do mesmo Firebase (ex: 'empresa1', 'empresa2')
+// IDENTIFICADOR DO DOCUMENTO — todos os usuários acessam a mesma base
 // ============================================================
-const DOC_ID = 'dados-empresa'; // <- altere aqui
+const DOC_ID = 'dados-unico'; // ID fixo para base de dados única
 
 // ============================================================
 // NÃO ALTERE ABAIXO DESTA LINHA
@@ -69,17 +68,16 @@ function fazerLogout() {
 function salvarNoFirebase() {
   if (!usuarioAtual) { console.log('Usuário não autenticado'); return; }
 
-  db.collection('usuarios').doc(usuarioAtual.uid).set({
-    email: usuarioAtual.email,
+  // Salva em uma base ÚNICA, independente do email
+  db.collection('dados').doc(DOC_ID).set({
     ultima_atualizacao: new Date(),
+    ultimo_usuario: usuarioAtual.email,
     dados: DB
   }).then(() => {
-    console.log('✅ Dados salvos no Firebase');
-    // Também salva no localStorage como backup
+    console.log('✅ Dados salvos no Firebase (base única)');
     localStorage.setItem('flumap_v2', JSON.stringify(DB));
   }).catch((e) => {
     console.error('❌ Erro ao salvar no Firebase:', e.message);
-    // Salva apenas no localStorage se Firebase falhar
     localStorage.setItem('flumap_v2', JSON.stringify(DB));
   });
 }
@@ -87,12 +85,12 @@ function salvarNoFirebase() {
 function carregarDadosDoFirebase() {
   if (!usuarioAtual) { init(); return; }
 
-  db.collection('usuarios').doc(usuarioAtual.uid).get().then((doc) => {
+  // Carrega da base ÚNICA, independente do email
+  db.collection('dados').doc(DOC_ID).get().then((doc) => {
     if (doc.exists && doc.data().dados) {
       DB = doc.data().dados;
-      console.log('✅ Dados carregados do Firebase');
+      console.log('✅ Dados carregados do Firebase (base única)');
     } else {
-      // Se não tiver dados no Firebase, carrega do localStorage
       const dadosSalvos = localStorage.getItem('flumap_v2');
       if (dadosSalvos) {
         try {
