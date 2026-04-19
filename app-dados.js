@@ -19,6 +19,8 @@ const CATS = {
   sistemas:      { nome: 'TI/Sistemas',  cor: '#42A5F5' },
   combustivel:   { nome: 'Combustível',  cor: '#EF5350' },
   manutencao:    { nome: 'Manutenção',   cor: '#66BB6A' },
+  motorista:     { nome: 'Motorista',    cor: '#FF9800' },
+  ajudante:      { nome: 'Ajudante',     cor: '#2196F3' },
   outros:        { nome: 'Outros',       cor: '#BDBDBD' },
   // Adicione novas categorias aqui:
   // nome_interno: { nome: 'Nome Exibido', cor: '#HEXCOR' },
